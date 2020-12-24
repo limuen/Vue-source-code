@@ -14,7 +14,7 @@ let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
-    // vue实例
+    // vue实例 this指向vue实例
     const vm: Component = this
     // a uid
     vm._uid = uid++
@@ -30,7 +30,7 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
-    // 合并选项
+    // 合并选项（用户选项和全局选项
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -50,17 +50,20 @@ export function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     // expose real self
-    // 各种初始化
+    /**
+     * 核心代码（各种初始化
+     */
     vm._self = vm
-    initLifecycle(vm) // $parent/$root
-    initEvents(vm) // 自定义事件监听
-    initRender(vm) // $slots/$createElement
+    initLifecycle(vm) // $parent/$root/$children/$refs属性的初始化 
+    initEvents(vm) // 组件级别的自定义事件监听 
+    initRender(vm) // $slots/$createElement（h）
+    // initLifecycle  initEvents initRender 做完以后插入钩子 只能访问上面3个里面的事件 父子 插槽 
     callHook(vm, 'beforeCreate')
     // 获取祖辈注入的数据
     initInjections(vm) // resolve injections before data/props
     initState(vm) // 数据状态初始化：data/props/methods/computed/watch
     // 给后代提供数据
-    initProvide(vm) // resolve provide after data/props
+    initProvide(vm) // resolve provide after data/props 给后代提供好数据之前，必须先注入数据和初始化才能提供
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -69,8 +72,8 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
-    // 选项如果有el，自动执行$mount
+    // 全部都是同步方法
+    // 选项如果有el，自动执行$mount 没有就手动挂
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

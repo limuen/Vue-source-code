@@ -57,11 +57,11 @@ export let currentRenderingInstance: Component | null = null
 export function setCurrentRenderingInstance (vm: Component) {
   currentRenderingInstance = vm
 }
-
+// 渲染都是异步的
 export function renderMixin (Vue: Class<Component>) {
   // install runtime convenience helpers
   installRenderHelpers(Vue.prototype)
-
+  
   Vue.prototype.$nextTick = function (fn: Function) {
     return nextTick(fn, this)
   }

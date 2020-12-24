@@ -23,7 +23,12 @@
             data:{foo:'foo'}
         })
         console.log(app.$options.render);
-        
+       // new Vue发生了什么？
+       // new Vue进去以后直接进入的Vue的构造函数，里面有一个_init方法
+       // new Vue 最重要的就是执行了一个初始化_init方法，初始化方法里面发生了最重要的事情就是选项的合并（用户选项和默认选项）
+       // 当前组件实例所需要的初始化包括（属性的初始化 、定义事件初始化、$slots/$createElement、以及beforeCreate的调用、祖辈注入的数据、数据状态初始化、给后代提供数据、以及created的调用
+       // 执行完以后需要$mount挂载执行完以后才能渲染页面（src/platforms/web/runtime/index.js
+       // 执行了mountComponent(from 'core/instance/lifecycle' 挂载组件
     </script>
 </body>
 </html>

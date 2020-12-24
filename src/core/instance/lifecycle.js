@@ -56,6 +56,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
+  // 1 初始化我要更新
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -66,6 +67,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
+      // 把虚拟dom变成真实dom并挂载到了$el
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
@@ -86,14 +88,14 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // updated hook is called by the scheduler to ensure that children are
     // updated in a parent's updated hook.
   }
-
+  // 1 初始化以后我要怎么更新（强制更新 
   Vue.prototype.$forceUpdate = function () {
     const vm: Component = this
     if (vm._watcher) {
       vm._watcher.update()
     }
   }
-
+  // 将来要注销的时候 直接把自己给销毁
   Vue.prototype.$destroy = function () {
     const vm: Component = this
     if (vm._isBeingDestroyed) {
@@ -187,6 +189,8 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
+    // 分别执行_render和_update 
+    // _update的作用是把虚拟dom变成真实dom
     updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }
@@ -195,6 +199,8 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 创建了一个watcher 一个组件就只有一个watcher
+  // 参数updateComponent 是一个 expOrFn 
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
@@ -208,6 +214,7 @@ export function mountComponent (
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
+    // 完成以后挂了一个mounted
     callHook(vm, 'mounted')
   }
   return vm
