@@ -53,6 +53,7 @@ export class Observer {
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
+      // 循环
       this.observeArray(value)
     } else {
       // 对象则遍历所有key

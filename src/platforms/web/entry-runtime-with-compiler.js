@@ -15,7 +15,6 @@ const idToTemplate = cached(id => {
 })
 
 // web平台需要扩展$mount：
-// 
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
